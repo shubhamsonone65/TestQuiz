@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}QuizHistory{% endblock title %}
+{% block body %}
+{% load static %}
+
+<div class="container my-3 historycontainer">
+<h3>Quiz History</h3>
+ {% if quizrecord %}
+<table class="table table-bordered">
+<thead>
+    <tr>
+      <th scope="col">Quiz ID</th>
+      <th scope="col">Name of student</th>
+      <th scope="col">Score (?/10)</th>
+      <th scope="col">Given On</th>
+    </tr>
+  </thead>
+ <tbody>
+{% for record in quizrecord %}
+    <tr>
+      <th scope="row">{{record.id}}</th>
+      <td>{{record.student.studentacc.username}}</td>
+      <td>{{record.score}}</td>
+      <td>{{record.time}}</td>
+    </tr>
+  {% endfor %}
+      </tbody>
+</table>
+  {% else %}
+  <h6> Student record not found... </h6>
+  {% endif %}
+
+{% endblock body %}

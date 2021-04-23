@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}QuizPage{% endblock title %}
+{% block body %}
+{% load static %}
+<div class="container my-4">
+    <h3 class="my-2">Quiz Results</h3>
+    {% if quizresult.score >= 6 %}
+    <div class="container border border-success border-2 p-2 my-3" style="color: green;border-radius: 10px;overflow-wrap: break-word!important;">
+        <h5>Congratulations, You have passed the quiz </h5>
+        <p>You have <strong>{{quizresult.score}}</strong> correct answers out of 10</p>
+        <p>Your data is successfully stored in database.</p>
+        <p>Time Taken : {{timeelapsed}}</p>
+    </div>
+    {% else %}
+    <div class="container border border-danger border-2 p-2 my-3" style="color: red;border-radius: 10px;overflow-wrap: break-word!important;">
+        <h5>Sorry, you failed the quiz. Better Luck Next Time... </h5>
+        <p><strong>You have <strong>{{quizresult.score}}</strong> correct answers out of 10</p>
+        <p>Your data is successfully stored in database.</p>
+        <p>Time Taken : {{timeelapsed}}</p>
+        </div>
+    {% endif %}
+    <p class="my-4">Back to <a href="/" class='btn btn-primary'>Home</a></p>
+</div>
+{% endblock body%}
+{% block js %}
+<script>
+    localStorage.clear()
+</script>
+{% endblock js %}

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+  <title>{% block title %}{% endblock title %}</title>
+</head>
+
+<body>
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show fixed-top" role="alert">
+      <strong>{{ message }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand mx-4" href="/">TestQuiz</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active my-1 mx-3 p-0" aria-current="page" href="/">Home</a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+          <h6 style="color:white;display:inline-block;">Hello... {{user.username}}</h6>
+            <a href="/quizhistory/" type="button"
+              class="btn btn-primary mx-2">QuizHistory</a>
+            <a href="/logout/" id="logoutstudent" type="button"
+              class="btn btn-primary mx-2">Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <button id="loginstudent" data-bs-target="#login_user" data-bs-toggle="modal" type="button"
+              class="btn btn-primary mx-2">Login/Signup</button>
+          </li>
+          {% endif %}
+      </div>
+
+    </div>
+  </nav>
+  {% block body %}{% endblock body %}
+  <div class="modal fade" id="login_user" aria-hidden="true" aria-labelledby="..." tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="/login/">{% csrf_token %}
+            <div class="row mb-3">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+              <div class="col-sm-10">
+                <input type="email" class="form-control" id="inputEmail3" name="email" required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="inputPassword3" name="password" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btnsub btn btn-primary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary btnsub">Login</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <!-- Toogle to second dialog -->
+          <label for="signup" class='heading'>New here? Click to </label><button id='signup'
+            class="btnsub btn btn-primary" data-bs-target="#signup_user" data-bs-toggle="modal"
+            data-bs-dismiss="modal">Signup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Second modal dialog -->
+  <div class="modal fade" id="signup_user" aria-hidden="true" aria-labelledby="..." tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">SignUp</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="/signup/">{% csrf_token %}
+            <div class="row mb-3">
+              <label for="fname" class="col-sm-4 col-form-label">First Name</label>
+              <div class="col-sm-8">
+                <input type="text" name='fname' class="form-control" id="fname" required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="lname" class="col-sm-4 col-form-label">Last Name</label>
+              <div class="col-sm-8">
+                <input type="text" name='lname' class="form-control" id="lname" required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputEmail3" class="col-sm-4 col-form-label">Email</label>
+              <div class="col-sm-8">
+                <input type="email" class="form-control" id="inputEmail3" name='mail' required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputPassword3" class="col-sm-4 col-form-label">Password</label>
+              <div class="col-sm-8">
+                <input type="password" class="form-control" id="inputPassword30" name='pass1' required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputPassword31" class="col-sm-4 col-form-label">Confirm
+                Password</label>
+              <div class="col-sm-8">
+                <input type="password" class="form-control" id="inputPassword31" name='pass2' required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btnsub btn btn-primary" data-bs-dismiss="modal">Close</button>
+              <button id="signupbut" type="submit" class="btnsub btn btn-primary">Signup</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <!-- Toogle to first dialog, `data-bs-dismiss` attribute can be omitted - clicking on link will close dialog anyway -->
+          <label for="login" class='heading'>Already had account? Click to </label><button id='login'
+            class="btnsub btn btn-primary" data-bs-target="#login_user" data-bs-toggle="modal"
+            data-bs-dismiss="modal">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optional JavaScript; choose one of the two! -->
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+    crossorigin="anonymous"></script>
+  {% block js %}{% endblock js %}
+
+</body>
+
+</html>

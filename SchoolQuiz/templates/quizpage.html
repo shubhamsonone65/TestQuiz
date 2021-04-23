@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}QuizPage{% endblock title %}
+{% block body %}
+{% load static %}
+<div class="container">
+    {% if num != 2 %}
+    <ul>
+    <li>Refreshing the page not allowed</li>
+    <li>Go to previous page or jump to other page not allowed</li>
+    <p>If this happens, you will be exited from the quiz</p>
+    </ul><hr>{% endif %}
+    <h3 class="my-4" style="display: inline-block">Quiz</h3><button id="exit" class="btn btn-primary mx-4" >Exit Quiz</button>
+    <div class="container inner">
+        <span id="question">{{que.que}}</span> <input type="hidden" id="queid" value="{{que.id}}">{{model.datetime|time}}
+        <form id="myform">{% csrf_token %}
+            {% for ans in answers %}
+            <input class="m-2" type="radio" name="answer" id="" value="{{ans}}" required>{{ans}} <br>
+            {% endfor %}
+            <button id="submit" type="submit" class="btn btn-primary my-2">Submit Answer</button>
+        </form>
+        {% if num == 99 %}
+        <span id="next"><strong> Quiz is completed </strong><a href="/quiz/results/" id="result" class="btn btn-primary my-2">View Result</a></span>
+        {% else %}
+        <a href="/quiz/{{category}}/{{num}}" id="next" class="btn btn-primary my-2">Next Question</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock body %}
+{% block js %}
+<script>
+    window.history.forward();
+        function noBack() {
+            window.history.forward();
+        }
+    if(localStorage.getItem('record')==undefined){
+        record={}
+        record['score']=0
+    }
+    else{
+        record = JSON.parse(localStorage.getItem('record'))
+    }
+    console.log(record)
+    $('#next').hide();
+    $('#submit').show();
+    var queid = document.getElementById('queid').value
+    const form = document.getElementById('myform')
+    question=document.getElementById('question').innerHTML
+    console.log(question)
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        $.ajax({
+            type: 'post',
+            url: '/check/' + queid + '/',
+            data: $('#myform').serialize(),
+            dataType: 'json',
+            success: function (data) {
+                record[question]=data.ans
+                if (data.msg == 'right') {
+                    record['score']+= 1
+                    $(".inner").append(`<div class="container border border-success border-2 p-2" style="color: green;border-radius: 10px;overflow-wrap: break-word!important;">
+                        <h5>Congratulations, Your answer is correct... </h5>
+                        <p>{{que.desc}}</p>
+                        </div>`)
+                        $('#next').show();
+                        $('#submit').hide();
+                    }
+                    else {
+                        $(".inner").append(`<div class="container border border-danger border-2 p-2" style="color: red;border-radius: 10px;overflow-wrap: break-word!important;">
+                            <h5>Sorry, your answer is wrong... </h5>
+                            <p><strong>Correct ans is {{que.Correctop}} :</strong> {{que.desc}}</p>
+                            </div>`);
+                            $('#next').show();
+                            $('#submit').hide();
+                        }
+                        localStorage.setItem('record',JSON.stringify(record))
+                    }
+            })
+        })
+        
+        $('#result').click(function(e){
+            e.preventDefault();
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            recorddata=localStorage.getItem('record')
+            recorddata=JSON.parse(recorddata)
+            $.ajax({
+            headers: { "X-CSRFToken": csrftoken },
+            type: 'post',
+            url: '/quiz/results/',
+            data: recorddata,
+            dataType: 'json',
+            success: function (data) {
+                if(data.msg=='success'){
+                    location.href='/quiz/results/'
+                }
+            }
+            })
+        })
+        $('#exit').click(function(){
+            localStorage.clear()
+            location.href='/'
+        })
+    </script>
+{% endblock js %}

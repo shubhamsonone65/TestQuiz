@@ -13,6 +13,7 @@
                     <h5 class="card-title">Quiz {{forloop.counter}}</h5>
                     <p class="card-text">This quiz questions are related to <b>{{cat|upper}}</b> Topic. All the best!!!
                     </p>
+                    {% if user.is %}{% endif %}
                     <a href="/quiz/{{cat}}/1/" class="btn btn-primary">Start Now</a>
                 </div>
             </div>

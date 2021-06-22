@@ -19,7 +19,8 @@
 <body>
   {% for message in messages %}
   <div class="alert alert-{{ message.tags }} alert-dismissible fade show fixed-top" role="alert">
-      <strong>{{ message }}</strong>
+      <strong>{{ message }}</strong>{% if user.is_authenticated %}{% else %}<strong> click to</strong><button id="loginstudent" data-bs-target="#login_user" data-bs-toggle="modal" type="button"
+              class="btn btn-primary btn-sm mx-2">Login</button>{% endif %}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   {% endfor %}
@@ -55,7 +56,7 @@
   </nav>
   {% block body %}{% endblock body %}
   <div class="modal fade" id="login_user" aria-hidden="true" aria-labelledby="..." tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Login</h5>
@@ -92,7 +93,7 @@
   </div>
   <!-- Second modal dialog -->
   <div class="modal fade" id="signup_user" aria-hidden="true" aria-labelledby="..." tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">SignUp</h5>

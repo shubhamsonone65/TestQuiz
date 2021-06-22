@@ -144,6 +144,7 @@ def signup(request):
             myuser.save()
             studentdata=student(studentacc=myuser,email=mail)
             studentdata.save()
+            login(request,myuser)
             messages.success(request, 'account is successfully created...')
     else:
         return render(request,'error.html')
